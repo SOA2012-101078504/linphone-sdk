@@ -13,7 +13,7 @@ RUN yum -y update  ca-certificates && \
     yum clean all
 
 # Install development tools
-RUN yum install -y at bison ccache clang cmake3 doxygen gcc-c++ gdb gettext-devel git graphviz libtool make nasm ninja-build patch redhat-lsb-core rpm-build yasm && \
+RUN yum install -y at bison ccache clang cmake3 doxygen gcc-c++ gdb gettext-devel git graphviz libtool make nasm ninja-build patch redhat-lsb-core rpm-build yasm rsync && \
     yum clean all && \
     ln -s /usr/bin/ccmake3 /usr/bin/ccmake && \
     ln -s /usr/bin/cmake3 /usr/bin/cmake && \

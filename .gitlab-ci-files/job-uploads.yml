@@ -375,6 +375,25 @@ job-bzrtp-doc-upload:
     #-E means extended regexp, see https://en.wikibooks.org/wiki/Regular_Expressions/POSIX-Extended_Regular_Expressions
 
     #getting the version number to push the right version of the doc
+    - git -C bzrtp describe
+    - git -C bzrtp describe --tags
+    - git -C bzrtp describe --always
+    - git -C bzrtp describe --first-parent
+    - git -C bzrtp describe --exact-match || true
+    - git -C bzrtp describe --all || true
+    - echo $CI_COMMIT_TAG
+    - git -C bzrtp cat-file -t 5.1.0-alpha
+    - git -C bzrtp cat-file -t 5.2.0-alpha
+    - git fetch --tags --verbose
+    - git -C bzrtp describe
+    - git -C bzrtp describe --tags
+    - git -C bzrtp describe --always
+    - git -C bzrtp describe --first-parent
+    - git -C bzrtp describe --exact-match || true
+    - git -C bzrtp describe --all || true
+    - git -C bzrtp cat-file -t 5.1.0-alpha
+    - git -C bzrtp cat-file -t 5.2.0-alpha
+    - echo $CI_COMMIT_TAG
     - BZRTP_VERSION=$(git -C bzrtp describe | grep -o -E '^[0-9]+\.[0-9]+')
     - echo $BZRTP_VERSION
     - UPLOAD_ROOT_DIRECTORY=$DEPLOY_RELEASES_DIRECTORY
@@ -409,6 +428,24 @@ job-lime-doc-upload:
     #-E means extended regexp, see https://en.wikibooks.org/wiki/Regular_Expressions/POSIX-Extended_Regular_Expressions
 
     #getting the version number to push the right version of the doc
+    - git -C lime describe
+    - git -C lime describe --tags
+    - git -C lime describe --always
+    - git -C lime describe --first-parent
+    - git -C lime describe --exact-match || true
+    - git -C lime describe --all || true
+    - echo $CI_COMMIT_TAG
+    - git -C lime cat-file -t 5.1.0-alpha
+    - git -C lime cat-file -t 5.2.0-alpha
+    - git fetch --tags --verbose
+    - git -C lime describe
+    - git -C lime describe --tags
+    - git -C lime describe --always
+    - git -C lime describe --first-parent
+    - git -C lime describe --exact-match || true
+    - git -C lime describe --all || true
+    - git -C lime cat-file -t 5.1.0-alpha
+    - git -C lime cat-file -t 5.2.0-alpha
     - LIME_VERSION=$(git -C lime describe | grep -o -E '^[0-9]+\.[0-9]+')
     - echo $LIME_VERSION
     - UPLOAD_ROOT_DIRECTORY=$DEPLOY_RELEASES_DIRECTORY

@@ -24,9 +24,6 @@
     - echo $ADDITIONAL_BUILD_OPTIONS
     - echo $ADDITIONAL_BUILD_CONFIGURATIONS
     - cmake --build . $ADDITIONAL_BUILD_CONFIGURATIONS --target sdk -- $ADDITIONAL_BUILD_OPTIONS
-    - cd /Users/buildbot/linphone-sdk/build-ios/WORK/ios-x86_64/Build/linphone/
-    - jazzy -x -scheme,linphonesw --readme /Users/buildbot/linphone-sdk/liblinphone/README.md
-    - cd -
     # get SDK version from cached cmake variables
     - cmake --log-level=ERROR -L ../CMakeLists.txt | grep LINPHONESDK_VERSION_CACHED | cut -d "=" -f2 > linphonesdkversion.txt
     - cat linphonesdkversion.txt

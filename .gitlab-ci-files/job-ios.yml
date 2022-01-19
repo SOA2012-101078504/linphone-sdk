@@ -68,7 +68,7 @@ job-ios-makefile:
 job-ios-ninja:
 
   rules:
-    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" || $CI_PIPELINE_SOURCE == "schedule" ) && $DOCKER_UPDATE == null && $SKIP_ANDROID == null
+    - if: $NIGHTLY_MASTER
 
   variables:
     CMAKE_GENERATOR: Ninja

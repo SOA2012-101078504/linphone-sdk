@@ -31,10 +31,8 @@
     - export CCACHE_BASEDIR=${PWD}
     - export CCACHE_DIR=${PWD}/ccache
     - ccache -s
-    - ccache --print-stats
     - ccache -z
     - ccache -s
-    - ccache --print-stats
 
     ##
     ## Set max number of jobs

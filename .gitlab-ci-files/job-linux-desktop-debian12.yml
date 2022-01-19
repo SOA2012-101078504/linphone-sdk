@@ -94,12 +94,16 @@ job-debian12-ninja-clang-sanitizer:
   variables:
     CMAKE_SANITIZER_OPTIONS: -DENABLE_SANITIZER=YES -DCMAKE_BUILD_TYPE=Debug
     ADDITIONAL_BUILD_OPTIONS: "-j 4"
+  rules:
+    - if: $NIGHTLY_MASTER
   extends: job-debian12-ninja-clang
 
 
 job-debian12-ninja-clang-novideo:
   variables:
     CMAKE_OPTIONS: -DENABLE_VIDEO=NO -DENABLE_LDAP=NO
+  rules:
+    - if: $NIGHTLY_MASTER
   extends: job-debian12-ninja-clang
 
 #################################################

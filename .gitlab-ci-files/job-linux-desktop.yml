@@ -23,7 +23,10 @@
     - cmake .. -G "$CMAKE_GENERATOR" -DLINPHONESDK_PLATFORM=Desktop $DEFAULT_LINUX_CMAKE_OPTIONS $CMAKE_OPTIONS $SCHEDULE_CMAKE_OPTIONS $CMAKE_SANITIZER_OPTIONS
     - echo $ADDITIONAL_BUILD_OPTIONS
     - cmake --build . --target sdk -- $ADDITIONAL_BUILD_OPTIONS
+    - cmake --log-level=ERROR -L ../CMakeLists.txt
+    - cmake --log-level=ERROR -LAH ..
     - echo $(git describe) > gitdescribe.txt
+    - sleep 2
   artifacts:
     paths:
       - build-desktop/gitdescribe.txt

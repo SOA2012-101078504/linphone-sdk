@@ -1,7 +1,7 @@
 .job-android:
 
   stage: build
-  tags: [ "docker" ]
+  tags: [ "docker-staging" ]
 
   variables:
     CCACHE_SIZE: 4G
@@ -50,7 +50,7 @@ job-android-makefile-r20:
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-android-r20:$ANDROID_R20_IMAGE_VERSION
 
   rules:
-    - if: $NIGHTLY_MASTER
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" || $CI_PIPELINE_SOURCE == "schedule" ) && $DOCKER_UPDATE == null && $SKIP_ANDROID == null
 
   variables:
     CMAKE_GENERATOR: Unix Makefiles

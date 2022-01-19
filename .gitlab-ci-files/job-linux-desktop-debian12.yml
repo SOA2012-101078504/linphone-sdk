@@ -79,10 +79,10 @@ job-debian12-ninja-gcc-smallsdk:
 
 job-debian12-ninja-clang:
 
-  tags: [ "docker" ]
+  tags: [ "docker-staging" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian12:$DEBIAN_12_IMAGE_VERSION
   rules:
-    - if: $NIGHTLY_MASTER
+    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" || $CI_PIPELINE_SOURCE == "schedule" ) && $DOCKER_UPDATE == null && $SKIP_ANDROID == null
   variables:
     CMAKE_GENERATOR: Ninja
     CC: clang

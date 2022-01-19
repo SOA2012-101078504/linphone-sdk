@@ -680,8 +680,7 @@ job-test-upload-libl-centos7-mr:
     PLATFORM: "linux-centos7"
     TESTER: "liblinphone"
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $SKIP_LINUX == null
-      when: always
+    - if: $NIGHTLY_MASTER
 
 job-test-upload-libl-centos7-schedule:
   extends: .job-test-report-upload-linux-scheduled

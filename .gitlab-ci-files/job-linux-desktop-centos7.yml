@@ -43,7 +43,7 @@ job-centos7-makefile-gcc:
 
 job-centos7-ninja-gcc:
 
-  tags: [ "docker" ]
+  tags: [ "docker-staging" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-centos7:$CENTOS_7_IMAGE_VERSION
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
@@ -135,7 +135,7 @@ test-liblinphone-centos7:
   <<: *docker_image_needs_platform_devtoolset_libl
 
 test-liblinphone-centos7-mr:
-  extends: .test-liblinphone-mr
+  extends: .test-liblinphone
   <<: *docker_image_needs_platform_devtoolset_libl
 
 test-liblinphone-centos7-force:

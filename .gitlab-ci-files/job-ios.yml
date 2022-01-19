@@ -68,7 +68,7 @@ job-ios-makefile:
 job-ios-ninja:
 
   rules:
-    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" || $CI_PIPELINE_SOURCE == "schedule") && $DOCKER_UPDATE == null && $SKIP_IOS == null
+    - if: $NIGHTLY_MASTER
 
   variables:
     CMAKE_GENERATOR: Ninja
@@ -123,11 +123,6 @@ job-ios-ninja-smallsdk:
 #################################################
 job-ios-xcode:
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      changes:
-        - .gitlab-ci-files/job-ios.yml
-        - .gitlab-ci-files/job-packages.yml
-        - cmake/NuGet/Xamarin/**/*
     - if: $NIGHTLY_MASTER
     - if: $NIGHTLY_RELEASE
     - if: $DEPLOY_RUN_IOS

@@ -25,7 +25,7 @@
     ## Then configure ccache
     ##
     - mkdir -p ccache
-    - echo "max_size = $CCACHE_SIZE" > ccache/ccache.conf
+    - echo "max_size = 20G" > ccache/ccache.conf
     - echo $CCACHE_SIZE
     - echo ${PWD}/ccache
     - export CCACHE_BASEDIR=${PWD}

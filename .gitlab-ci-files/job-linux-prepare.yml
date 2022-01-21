@@ -31,13 +31,23 @@
     ##
     - mkdir -p ccache
     - echo "max_size = 20G" > ccache/ccache.conf
-    - echo "CCACHE_COMPILERCHECK = content" >> ccache/ccache.conf
     - echo $CCACHE_SIZE
     - echo ${PWD}/ccache
     - export CCACHE_BASEDIR=${PWD}
     - export CCACHE_DIR=${PWD}/ccache
+    # This function converts the version given to a raw number in order for sh -ge to compare it to the other.
+    # Here we get the ccache version by parsing the --version with grep and perl-style regex. If this option isn't available for some reason, remember to fallback to [0-9] instead of \d
+    - |
+        function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+        if [ $(version $(ccache --version | grep -P "\d+\.\d+" -o)) -ge $(version "3.7") ]; then
+          echo "CCACHE_COMPILERCHECK = content" >> ccache/ccache.conf
+          echo "Ccache >= 3.7, we can use 'content' mode to get more cache hits"
+        else
+          echo "Ccache < 3.7, we can't use 'content' mode to get more cache hits"
+        fi
     - ccache -s
     - ccache -z
+    # no need to use --print-stats unless for parsing. -s already gives all needed information, it just hides output with 0
     - ccache -s
 
     ##
@@ -54,4 +64,3 @@
     - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then rm -rf ~/.ssh || true; fi
     - export CCACHE_DIR=${PWD}/ccache
     - ccache -s
-    - ccache --print-stats

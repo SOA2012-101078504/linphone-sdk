@@ -14,7 +14,10 @@
   variables:
     CACHE_COMPRESSION_LEVEL: "fastest"
     FF_USE_FASTZIP: 1
+
+    # Will work after the update to Gitlab 14
     FF_SCRIPT_SECTIONS: 1
+
 
   before_script:
     ##

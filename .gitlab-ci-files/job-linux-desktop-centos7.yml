@@ -33,7 +33,9 @@ job-centos7-makefile-gcc:
     #ADDITIONAL_BUILD_OPTIONS: -j[jobs]
     CC: gcc
     CXX: g++
-  extends: .job-linux-desktop
+  extends:
+    - .job-linux-desktop
+    - .centos7-prepare
 
 
 #################################################
@@ -52,7 +54,9 @@ job-centos7-ninja-gcc:
     CMAKE_GENERATOR: Ninja
     CC: gcc
     CXX: g++
-  extends: .job-linux-desktop
+  extends:
+    - .job-linux-desktop
+    - .centos7-prepare
 #################################################
 # TESTS
 #################################################

@@ -26,7 +26,9 @@ job-debian10-makefile-gcc:
     CXX: g++
     #Only used to overwrite value set by .set_parallel_level.yml
     #ADDITIONAL_BUILD_OPTIONS: -j[jobs]
-  extends: .job-linux-desktop
+  extends:
+    - .job-linux-desktop
+    - .ccache-before-and-3.7-prepare
 
 
 job-debian10-makefile-clang:
@@ -41,7 +43,9 @@ job-debian10-makefile-clang:
     CXX: clang++
     #Only used to overwrite value set by .set_parallel_level.yml
     #ADDITIONAL_BUILD_OPTIONS: -j[jobs]
-  extends: .job-linux-desktop
+  extends:
+    - .job-linux-desktop
+    - .ccache-before-and-3.7-prepare
 
 
 #################################################
@@ -60,7 +64,9 @@ job-debian10-ninja-gcc:
     CC: gcc
     CXX: g++
     CMAKE_OPTIONS: -DENABLE_LDAP=NO
-  extends: .job-linux-desktop
+  extends:
+    - .job-linux-desktop
+    - .ccache-before-and-3.7-prepare
 
 
 job-debian10-ninja-gcc-novideo:
@@ -93,7 +99,9 @@ job-debian10-ninja-clang:
     CC: clang
     CXX: clang++
     CMAKE_OPTIONS: -DENABLE_LDAP=NO
-  extends: .job-linux-desktop
+  extends:
+    - .job-linux-desktop
+    - .ccache-before-and-3.7-prepare
 
 job-debian10-ninja-clang-sanitizer:
   variables:

@@ -1,3 +1,54 @@
+.set-tunnel-key:
+  before_script:
+    ##
+    ## If a TUNNEL_USER_KEY is defined then start ssh-agent and add the key
+    ##
+    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then eval $(ssh-agent -s); fi
+    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then echo "$TUNNEL_USER_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
+    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then mkdir -p ~/.ssh && chmod 700 ~/.ssh; fi
+    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then echo -e "Host gitlab.linphone.org\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config; fi
+    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then chmod 700 ~/.ssh/config; fi
+
+  after_script:
+    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then rm -rf ~/.ssh || true; fi
+
+.centos7-enable-devtoolset:
+  script:
+    - source /opt/rh/devtoolset-8/enable;
+
+.ccache-config:
+  variables:
+    CCACHE_DIRECTORY_NAME: "ccache"
+    SET_COMPILE_CHECK: "CCACHE_COMPILERCHECK = content"
+    COMPILE_CHECK_EXPLANATION: "Ccache >= 3.7, we can use 'content' mode to get more cache hits"
+  script:
+    ##
+    ## Then configure ccache
+    ##
+    - mkdir -p ${CCACHE_DIRECTORY_NAME}
+    - echo "max_size = 20G" > ccache/ccache.conf
+    - echo $CCACHE_SIZE
+    - echo ${PWD}/${CCACHE_DIRECTORY_NAME}
+    - export CCACHE_BASEDIR=${PWD}
+    - export CCACHE_DIR=${PWD}/${CCACHE_DIRECTORY_NAME}
+    - echo "${SET_COMPILE_CHECK}" >> ccache/ccache.conf
+    - echo "${COMPILE_CHECK_EXPLANATION}"
+    - ccache -s
+    - ccache -z
+    # no need to use --print-stats unless for parsing. -s already gives all needed information, it just hides output with 0
+    - ccache -s
+  after_script:
+    - export CCACHE_DIR=${PWD}/${CCACHE_DIRECTORY_NAME}
+    - ccache -s
+
+.ccache-before-and-3.7-config:
+  extends: .ccache-config
+  variables:
+    CCACHE_DIRECTORY_NAME: "ccache-timestamp"
+    SET_COMPILE_CHECK: ""
+    COMPILE_CHECK_EXPLAINATION: "Ccache < 3.7, we can't use 'content' mode to get more cache hits"
+
+
 .linux-prepare:
 
   cache:
@@ -13,6 +64,7 @@
 
   variables:
     CACHE_COMPRESSION_LEVEL: "fastest"
+    CCACHE_DIRECTORY_NAME: "ccache"
     FF_USE_FASTZIP: 1
 
     # Will work after the update to Gitlab 14
@@ -20,50 +72,51 @@
 
 
   before_script:
-    ##
-    ## If a TUNNEL_USER_KEY is defined then start ssh-agent and add the key
-    ##
-    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then eval $(ssh-agent -s); fi
-    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then echo "$TUNNEL_USER_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
-    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then mkdir -p ~/.ssh && chmod 700 ~/.ssh; fi
-    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then echo -e "Host gitlab.linphone.org\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config; fi
-    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then chmod 700 ~/.ssh/config; fi
 
+    - !reference [.set-tunnel-key, before_script]
     ##
-    ## Then configure ccache
+    ## Set max number of jobs
     ##
-    - mkdir -p ccache
-    - echo "max_size = 20G" > ccache/ccache.conf
-    - echo $CCACHE_SIZE
-    - echo ${PWD}/ccache
-    - export CCACHE_BASEDIR=${PWD}
-    - export CCACHE_DIR=${PWD}/ccache
-    # This function converts the version given to a raw number in order for sh -ge to compare it to the other.
-    # Here we get the ccache version by parsing the --version with grep and perl-style regex. If this option isn't available for some reason, remember to fallback to [0-9] instead of \d
-    - |
-        function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
-        if [ $(version $(ccache --version | grep -P "\d+\.\d+" -o)) -ge $(version "3.7") ]; then
-          echo "CCACHE_COMPILERCHECK = content" >> ccache/ccache.conf
-          echo "Ccache >= 3.7, we can use 'content' mode to get more cache hits"
-        else
-          echo "Ccache < 3.7, we can't use 'content' mode to get more cache hits"
-        fi
-    - ccache -s
-    - ccache -z
-    # no need to use --print-stats unless for parsing. -s already gives all needed information, it just hides output with 0
-    - ccache -s
+    - !reference [.set-max-jobs-unix, script]
 
+    - !reference [.ccache-config, script]
+
+  after_script:
+    - !reference [.ccache-config, after_script]
+    - !reference [.set-tunnel-key, after_script]
+
+.centos7-prepare:
+  extends: .linux-prepare
+  before_script:
+
+    - !reference [.set-tunnel-key, before_script]
     ##
     ## Set max number of jobs
     ##
     - !reference [.set-max-jobs-unix, script]
 
     #Configure dev-toolset for centos-7
+    - !reference [.centos7-enable-devtoolset, script]
 
-    - CENTOS_VERSION=$(cat /etc/centos-release) || true
-    - if [ -n "$CENTOS_VERSION" ] && [ -n "$(echo $CENTOS_VERSION | grep -o 'release 7')" ]; then source /opt/rh/devtoolset-8/enable; fi
+    - !reference [.ccache-config, script]
+
+.ccache-before-and-3.7-prepare:
+  cache:
+    key: linux-build-timestamp
+    paths:
+      - ccache-timestamp/
+
+  extends: .linux-prepare
+  before_script:
+
+    - !reference [.set-tunnel-key, before_script]
+    ##
+    ## Set max number of jobs
+    ##
+    - !reference [.set-max-jobs-unix, script]
+
+    - !reference [.ccache-before-and-3.7-config, script]
 
   after_script:
-    - if ! [ -z ${TUNNEL_USER_KEY+x} ]; then rm -rf ~/.ssh || true; fi
-    - export CCACHE_DIR=${PWD}/ccache
-    - ccache -s
+    - !reference [.ccache-before-and-3.7-config, after_script]
+    - !reference [.set-tunnel-key, after_script]

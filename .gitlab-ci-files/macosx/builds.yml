@@ -15,7 +15,7 @@
     LINPHONESDK_OPENSSL_ROOT_DIR_ARM64: "/opt/homebrew/opt/openssl@1.1"
 
   script:
-    - !reference [.set-max-jobs-unix, script]
+    - export CMAKE_BUILD_PARALLEL_LEVEL=8
     - echo $MACOS_DEPLOY_URL
     - echo $XCODE_OPTIONS
     - ccache -s
@@ -49,7 +49,7 @@
     expire_in: 1 week
 
 .macosx-m1-desktop:
-  tags: [ "macmini-m1-xcode12" ]
+  tags: [ "macmini-m1-xcode12-test" ]
   variables:
     LINPHONESDK_MACOS_ARCHS: "arm64, x86_64"
   extends: .macosx-desktop

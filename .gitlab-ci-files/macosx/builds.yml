@@ -15,6 +15,11 @@
     LINPHONESDK_OPENSSL_ROOT_DIR_ARM64: "/opt/homebrew/opt/openssl@1.1"
 
   script:
+    - export CCACHE_MAXSIZE=10G
+    - export CCACHE_DEBUG=1
+    - echo $CCACHE_MAXSIZE
+    - echo $CCACHE_DEBUG
+    - ccache -p
     - export CMAKE_BUILD_PARALLEL_LEVEL=8
     - echo $MACOS_DEPLOY_URL
     - echo $XCODE_OPTIONS

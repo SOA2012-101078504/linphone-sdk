@@ -53,6 +53,9 @@ endif()
 if(NOT ENABLE_X264)
 	list(APPEND _dummy_libraries "msx264")
 endif()
+if(NOT ENABLE_SFU)
+	list(APPEND _dummy_libraries "mssfusecure")
+endif()
 
 
 if(LINPHONESDK_PREBUILD_DEPENDENCIES)

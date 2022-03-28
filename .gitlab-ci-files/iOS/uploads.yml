@@ -25,7 +25,7 @@
     - scp build-ios/linphone-sdk-*.zip $DEPLOY_SERVER:$UPLOAD_ROOT_DIRECTORY/ios/$PODSPEC_END_PATH
     - pod repo remove $PODNAME || true
     - pod repo add $PODNAME git@gitlab.linphone.org:BC/public/podspec.git
-    - pod repo push $PODNAME build-ios/$PODNAME.podspec --skip-import-validation --verbose
+    - pod repo push $PODNAME build-ios/$PODNAME.podspec --skip-import-validation --verbose --allow-warnings
     - pod repo remove $PODNAME
 
 # The iOS documentation is only uploaded in this job, this is why we redefine before_script in no_video job

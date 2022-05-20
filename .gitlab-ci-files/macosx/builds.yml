@@ -160,3 +160,9 @@ macosx-xcode:
     - XCODE_OPTIONS="-DLINPHONESDK_MACOS_BASE_URL=$MACOS_URL"
 
     - !reference [.macosx-m1-desktop, script]
+
+macosx-m1-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  rules:
+    - if: $XCODE13
+  extends: macosx-xcode

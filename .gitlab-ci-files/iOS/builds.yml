@@ -60,6 +60,12 @@ ios-makefile:
   extends: .ios
 
 
+ios-makefile-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  rules:
+    - if: $XCODE13
+  extends: ios-makefile
+
 #################################################
 # Ninja
 #################################################
@@ -86,6 +92,12 @@ ios-ninja-allcodecs:
     CMAKE_OPTIONS: -DENABLE_CODEC2=ON -DENABLE_G729=ON -DENABLE_NON_FREE_CODECS=ON
   extends: .ios
 
+ios-ninja-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  rules:
+    - if: $XCODE13
+  extends: ios-ninja
+
 
 ios-ninja-g729:
 
@@ -97,6 +109,12 @@ ios-ninja-g729:
     CMAKE_OPTIONS: -DENABLE_G729=ON
   extends: ios-ninja
 
+ios-ninja-g729-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  rules:
+    - if: $XCODE13
+  extends: ios-ninja-g729
+
 
 ios-ninja-novideo:
   rules:
@@ -107,6 +125,11 @@ ios-ninja-novideo:
     CMAKE_OPTIONS: -DENABLE_VIDEO=NO
   extends: ios-ninja
 
+ios-ninja-novideo-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  rules:
+    - if: $XCODE13
+  extends: ios-ninja-novideo
 
 ios-ninja-smallsdk:
   rules:
@@ -117,6 +140,11 @@ ios-ninja-smallsdk:
     CMAKE_OPTIONS: -DENABLE_VIDEO=NO -DENABLE_ADVANCED_IM=NO -DENABLE_DB_STORAGE=NO -DENABLE_FLEXIAPI=NO
   extends: ios-ninja
 
+ios-ninja-smallsdk-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  rules:
+    - if: $XCODE13
+  extends: ios-ninja-smallsdk
 
 #################################################
 # XCode
@@ -150,6 +178,12 @@ ios-xcode:
 
   extends: .ios
 
+ios-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  rules:
+    - if: $XCODE13
+  extends: ios-xcode
+
 ios-xcode-novideo:
   rules:
     - if: $NIGHTLY_MASTER
@@ -176,3 +210,9 @@ ios-xcode-novideo:
     - XCODE_OPTIONS="-DLINPHONESDK_IOS_BASE_URL=$IOS_URL/novideo/"
     - !reference [.ios, script]
   extends: .ios
+
+ios-xcode-novideo-13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  rules:
+    - if: $XCODE13
+  extends: ios-xcode

@@ -79,6 +79,18 @@ macosx-m1-makefile:
     #ADDITIONAL_BUILD_OPTIONS: -j[jobs]
   extends: .macosx-m1-desktop
 
+macosx-m1-makefile-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  variables:
+    CMAKE_GENERATOR: Unix Makefiles
+    #Only used to overwrite value set by .set_parallel_level.yml
+    #ADDITIONAL_BUILD_OPTIONS: -j[jobs]
+  rules:
+    - if: $XCODE13
+  extends: .macosx-m1-desktop
+
+
+
 #################################################
 # Ninja
 #################################################
@@ -107,6 +119,16 @@ macosx-ninja-novideo:
   variables:
     CMAKE_OPTIONS: -DENABLE_VIDEO=NO -DENABLE_LDAP=ON
   extends: macosx-ninja
+
+
+macosx-m1-ninja-xcode13.3.1:
+  tags: [ "macmini-m1-xcode13" ]
+  variables:
+    CMAKE_GENERATOR: Ninja
+    CMAKE_OPTIONS: -DENABLE_UNIT_TESTS=ON -DENABLE_LDAP=ON
+  rules:
+    - if: $XCODE13
+  extends: .macosx-m1-desktop
 
 
 #################################################

@@ -36,7 +36,6 @@ liblinphone-iOS-test:
     - trainer ${CI_PROJECT_DIR}/tester/IOS/LinphoneTester/build/Logs/Test/*.xcresult -o .
     - mv *.xml $XML_PATTERN.xml
 
-
     - BRANCH=$CI_COMMIT_REF_NAME
     - echo $BRANCH
     - ESCAPED_BRANCH=$(echo $BRANCH | tr / _)
@@ -66,6 +65,80 @@ liblinphone-iOS-test:
     - echo $CI_JOB_URL > ${CI_PROJECT_DIR}/results/job_url
     - cp -r $XML_PATTERN.xml ${CI_PROJECT_DIR}/results
     - cp -r tester/IOS/LinphoneTester/$LOG_PATTERN.txt ${CI_PROJECT_DIR}/results
+    - cp index.html ${CI_PROJECT_DIR}/results
+
+  artifacts:
+    paths:
+      - results/*
+    when: always
+    reports:
+      junit:
+        - ${CI_PROJECT_DIR}/results/*.xml
+    expire_in: 4 week
+
+
+physical-push-iOS-test:
+  tags: [ "macmini-m1-xcode13" ]
+  stage: test
+  allow_failure: true
+  needs:
+    - ios-ninja
+
+  variables:
+    PUSH_TESTS_OUTPUT: "PUSH_TESTS"
+
+  script:
+    - unzip build-ios/linphone-sdk-*.zip -d build-ios/
+    - cd ${CI_PROJECT_DIR}/tester/IOS/LinphoneTester
+    - echo ${CI_PROJECT_DIR}/tester/IOS/LinphoneTester
+    - PODFILE_PATH=../../../build-ios pod install
+
+    # Test launching
+    - |
+        xcodebuild test -workspace LinphoneTester.xcworkspace \
+        -scheme LinphoneTester \
+        -destination name='iPhone de Bc' \
+        -only-testing LinphoneTesterTests/PhysicalDeviceIncomingPushTests \
+        -resultBundlePath $PUSH_TESTS_OUTPUT
+
+  after_script:
+    - echo "generating xml results in $PUSH_TESTS_OUTPUT.xml"
+    - trainer
+    - mv *.xml $PUSH_TESTS_OUTPUT.xml
+    - echo "extracting XCTestAttachments in $PUSH_TEST_OUTPUT folder"
+    - xcparse attachments outputdir.xcresult $PUSH_TEST_OUTPUT --uti public.plain-text
+    - echo "Compressing attachments into $PUSH_TEST_OUTPUT.zip"
+    - zip -r $PUSH_TEST_OUTPUT.zip $PUSH_TEST_OUTPUT
+
+    - BRANCH=$CI_COMMIT_REF_NAME
+    - echo $BRANCH
+    - ESCAPED_BRANCH=$(echo $BRANCH | tr / _)
+    - echo $ESCAPED_BRANCH
+    - COMMIT=$(git describe)
+    - echo $COMMIT
+    - URL=https://$DEPLOY_SERVER_DOMAIN/snapshots/allure-tests-reports/$ESCAPED_BRANCH/$COMMIT-$CI_JOB_ID/ios/liblinphone/allure-report
+
+    - echo "<\!DOCTYPE HTML>" >> index.html
+    - echo "<meta charset=\"UTF-8\">" >> index.html
+    - echo "<meta http-equiv=\"refresh\" content=\"1; url=$URL\">" >> index.html
+    - echo "<script>" >> index.html
+    - echo "  window.location.href = \"$URL\"" >> index.html
+    - echo "</script>" >> index.html
+    - echo "<title>Page Redirection</title>" >> index.html
+    - echo "<\!-- Don't tell people to \`click\` the link, just tell them that it is a link. -->" >> index.html
+    - echo "If you are not redirected automatically, follow the <a href='$URL'>link to see the test report</a>" >> index.html
+    - cat index.html
+
+    - echo "TEST REPORTS URL $URL"
+
+    - echo "alias URL=https://$DEPLOY_SERVER_DOMAIN/snapshots/allure-tests-reports/$ESCAPED_BRANCH/$GITLAB_USER_LOGIN/$COMMIT-$CI_JOB_ID/ios/liblinphone/allure-report"
+
+    #Gathering artifacts in one folder to ease their use
+    - mkdir ${CI_PROJECT_DIR}/results
+    - echo $CI_JOB_ID > ${CI_PROJECT_DIR}/results/tests_id
+    - echo $CI_JOB_URL > ${CI_PROJECT_DIR}/results/job_url
+    - cp -r $PUSH_TESTS_OUTPUT.xml ${CI_PROJECT_DIR}/results
+    - cp -r $PUSH_TEST_OUTPUT.zip ${CI_PROJECT_DIR}/results
     - cp index.html ${CI_PROJECT_DIR}/results
 
   artifacts:

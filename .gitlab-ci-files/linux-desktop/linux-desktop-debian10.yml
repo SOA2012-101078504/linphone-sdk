@@ -82,7 +82,7 @@ debian10-ninja-gcc-smallsdk-flexiapi:
 debian10-ninja-gcc-smallsdk:
 
   rules:
-   - if: $NIGHTLY_MASTER
+    - if: $NIGHTLY_MASTER
 
   variables:
     CMAKE_OPTIONS: -DENABLE_VIDEO=NO -DENABLE_ADVANCED_IM=NO -DENABLE_DB_STORAGE=NO -DENABLE_FLEXIAPI=NO -DENABLE_LDAP=NO

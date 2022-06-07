@@ -70,10 +70,19 @@ debian10-ninja-gcc-novideo:
   extends: debian10-ninja-gcc
 
 
-debian10-ninja-gcc-smallsdk:
+debian10-ninja-gcc-smallsdk-flexiapi:
 
 #  rules:
 #    - if: $NIGHTLY_MASTER
+
+  variables:
+    CMAKE_OPTIONS: -DENABLE_VIDEO=NO -DENABLE_ADVANCED_IM=NO -DENABLE_DB_STORAGE=NO -DENABLE_FLEXIAPI=YES -DENABLE_LDAP=NO
+  extends: debian10-ninja-gcc
+
+debian10-ninja-gcc-smallsdk:
+
+  rules:
+   - if: $NIGHTLY_MASTER
 
   variables:
     CMAKE_OPTIONS: -DENABLE_VIDEO=NO -DENABLE_ADVANCED_IM=NO -DENABLE_DB_STORAGE=NO -DENABLE_FLEXIAPI=NO -DENABLE_LDAP=NO
@@ -162,6 +171,6 @@ test-liblinphone-debian10-smallsdk:
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-debian10-test-liblinphone:$DEBIAN_10_TEST_LIBLIN_IMAGE_VERSION
   extends: .test-liblinphone-mr
   needs:
-    - debian10-ninja-gcc-smallsdk
+    - debian10-ninja-gcc-smallsdk-flexiapi
   variables:
     PLATFORM: linux-debian10

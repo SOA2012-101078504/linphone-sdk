@@ -64,6 +64,9 @@ ubuntu-rolling-image-docker-rebuild-liblinphone-test:
 ubuntu-rolling-makefile-gcc-newdocker:
   extends: ubuntu-rolling-makefile-gcc
   <<: *docker_image_rule_no_cache
+  script:
+    - CMAKE_FIND_DEBUG_MODE=1
+    - !reference [ubuntu-rolling-makefile-gcc, script]
 
 #ubuntu-rolling-ninja-gcc-newdocker:
 #  extends: ubuntu-rolling-ninja-gcc

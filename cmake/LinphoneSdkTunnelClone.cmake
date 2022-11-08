@@ -27,7 +27,8 @@ include(LinphoneSdkUtils)
 linphone_sdk_check_git()
 
 
-set(TUNNEL_REVISION "ff771d23430d55ed417fb5267ad418afbfc9ace6")
+#set(TUNNEL_REVISION "ff771d23430d55ed417fb5267ad418afbfc9ace6")
+set(TUNNEL_REVISION "fix/deadlock")
 
 
 if(IS_DIRECTORY "${LINPHONESDK_DIR}/tunnel")

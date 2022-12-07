@@ -1,7 +1,7 @@
 .macosx-desktop:
   extends: .job-prepare
   stage: build
-  tags: [ "macos-xcode13" ]
+  tags: [ "macmini-m1-xcode13" ]
 
   rules:
     - if: ($CI_PIPELINE_SOURCE == "merge_request_event") && $DOCKER_UPDATE == null && $SKIP_MACOSX == null
@@ -55,7 +55,7 @@
     expire_in: 1 week
 
 .macosx-m1-multiarch-desktop:
-  tags: [ "macosx-min-xcode12.2" ]
+  tags: [ "macmini-m1-xcode12" ]
   variables:
     LINPHONESDK_MACOS_ARCHS: "arm64, x86_64"
   extends: .macosx-desktop

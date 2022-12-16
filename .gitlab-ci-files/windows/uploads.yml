@@ -18,7 +18,7 @@
   echo "upload_directory=$DEPLOY_ROOT_DIRECTORY"
 
 
-vs2017-win32-windows-upload:
+vs2019-win32-windows-upload:
   stage: deploy
   tags: [ "windows-powershell"]
 
@@ -31,7 +31,7 @@ vs2017-win32-windows-upload:
     GIT_FETCH_EXTRA_FLAGS: --tags --force --recurse-submodules=yes
     GIT_SUBMODULE_UPDATE_FLAGS: --jobs 8 --force --recursive
   needs:
-    - vs2017-win32-scheduled-windows
+    - vs2019-win32-scheduled-windows
   script:
     - *check_snapshot_or_release_windows
     # We are forced to use brakets, otherwize powershell will resolve ':' as part of a drive letter
@@ -51,7 +51,7 @@ cs-doc-windows-upload:
     - if: $UPLOAD_CS_DOC && $SKIP_DEPLOY == null
 
   needs:
-    - vs2017-win32-scheduled-windows
+    - vs2019-win32-scheduled-windows
   script:
     # Getting the version number to push the right version of the doc
     - echo $CI_PROJECT_DIR
@@ -83,7 +83,7 @@ nuget-upload-windows:
     - if: $NIGHTLY_RELEASE
 
   needs:
-    - job: vs2017-nuget-windows-package
+    - job: vs2019-nuget-windows-package
 
   script:
     - nuget push "build-desktop/linphone-sdk/packages/*.nupkg" -Source gitlab

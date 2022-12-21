@@ -3,11 +3,11 @@
     "bctoolbox-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1665674331,
-        "narHash": "sha256-9kJUCQfajb8kvvDk21Lk/+7+Kuy9uNNL4DMjW7Hv1uM=",
-        "ref": "c1a10ffa622f9226e355a5b311c06f0f4b78976e",
-        "rev": "c1a10ffa622f9226e355a5b311c06f0f4b78976e",
-        "revCount": 790,
+        "lastModified": 1670402341,
+        "narHash": "sha256-BV1+VjkSAEbR8jgLTbeOY05blylv1N91LvBkmUulxxk=",
+        "ref": "c2e61c5a283a5ab7d07c61011d48ef0ab0531d99",
+        "rev": "c2e61c5a283a5ab7d07c61011d48ef0ab0531d99",
+        "revCount": 793,
         "type": "git",
         "url": "file:./bctoolbox"
       },
@@ -51,11 +51,11 @@
     "belle-sip-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1663847344,
-        "narHash": "sha256-Q7vfoWs8T3aYR4MZ5tUgq939zUJIDR7Ue2WPSfy4jSk=",
-        "ref": "fc0ed18ffe51d078d34507e2abdb9ea162d72bd4",
-        "rev": "fc0ed18ffe51d078d34507e2abdb9ea162d72bd4",
-        "revCount": 2111,
+        "lastModified": 1667580399,
+        "narHash": "sha256-LMbQz22ENTT27jr9tGakzNjidC5nfCuLDMZ6sFwtRKI=",
+        "ref": "408168dc1caf455000a515ba831cdc1db81f4362",
+        "rev": "408168dc1caf455000a515ba831cdc1db81f4362",
+        "revCount": 2112,
         "type": "git",
         "url": "file:./belle-sip"
       },
@@ -83,11 +83,11 @@
     "bzrtp-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1663933031,
-        "narHash": "sha256-opYeK0104pbSJy4BCTviU/kFDkxMiIKUWThA1QCA+68=",
-        "ref": "141838f51e3aa0e93109c1060f5068b1aa103b22",
-        "rev": "141838f51e3aa0e93109c1060f5068b1aa103b22",
-        "revCount": 309,
+        "lastModified": 1668430154,
+        "narHash": "sha256-nrnGmJxAeobejS6zdn5Z/kOFOxyepZcxW/G4nXAt2DY=",
+        "ref": "b8194979fd5ad657381be6b7b989813b1d763075",
+        "rev": "b8194979fd5ad657381be6b7b989813b1d763075",
+        "revCount": 313,
         "type": "git",
         "url": "file:./bzrtp"
       },
@@ -115,11 +115,11 @@
     "liblinphone-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1667204666,
-        "narHash": "sha256-xMf/bQ1944XlqHmRwAfDyLNJ8wb1yfdPhTnEtS5pV8A=",
+        "lastModified": 1671627958,
+        "narHash": "sha256-kNBNUSpRWCeaCFfYto4vI+nxaUsZo1uCz4jWKb3GEck=",
         "ref": "refs/heads/feature/nix-flake",
-        "rev": "ac82490110728af311b2f2aa9e7803a8abc760c9",
-        "revCount": 15937,
+        "rev": "fd11966ee2c84ff1256ef25748017af46a693ae2",
+        "revCount": 15994,
         "type": "git",
         "url": "file:./liblinphone"
       },
@@ -131,11 +131,11 @@
     "lime-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1661851313,
-        "narHash": "sha256-ZgTynyH+4O4Mq8qUHmlBvlBm9eWwhBjPlEx5LKtVO80=",
-        "ref": "ca59593f3e577d28d3dadecba0516eaa2aa92e92",
-        "rev": "ca59593f3e577d28d3dadecba0516eaa2aa92e92",
-        "revCount": 239,
+        "lastModified": 1668033237,
+        "narHash": "sha256-WQ6AcJpQSvWR5m2edVNji5u6ZiS4QOH45vQN2q+39NU=",
+        "ref": "c20149550d1d9386cff67640d5391d0c814a7e70",
+        "rev": "c20149550d1d9386cff67640d5391d0c814a7e70",
+        "revCount": 241,
         "type": "git",
         "url": "file:./lime"
       },
@@ -147,11 +147,11 @@
     "mediastreamer2-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1665731892,
-        "narHash": "sha256-LhifxjuX8IRsdFF3X059YUbzOOt4egqMliEXFA/Fka8=",
-        "ref": "8b10264baa07a5e108b4b8052d16c47605690b8c",
-        "rev": "8b10264baa07a5e108b4b8052d16c47605690b8c",
-        "revCount": 6319,
+        "lastModified": 1670303655,
+        "narHash": "sha256-ANB0fxaemDrDweR7gGFD9/8HP61H1J3tgZ9lRfP5rig=",
+        "ref": "723a7e81c7d2dc1639fd648cba433439a616ced0",
+        "rev": "723a7e81c7d2dc1639fd648cba433439a616ced0",
+        "revCount": 6334,
         "type": "git",
         "url": "file:./mediastreamer2"
       },
@@ -163,11 +163,11 @@
     "msopenh264-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1654001160,
-        "narHash": "sha256-YM1KQ+4VJPfQ0jI8dWFVyOtTphoX6TAd1NZTZtFAHRA=",
-        "ref": "c09d2652245f0d660f427c1cf5ae97709b504803",
-        "rev": "c09d2652245f0d660f427c1cf5ae97709b504803",
-        "revCount": 154,
+        "lastModified": 1665651306,
+        "narHash": "sha256-V7qyDavcbQ9mHTDiZQA+pPW27jDG9aRc3jOx0FbOd0k=",
+        "ref": "5c7a9522478f5eedc9a3e1600fdd705da1e00d23",
+        "rev": "5c7a9522478f5eedc9a3e1600fdd705da1e00d23",
+        "revCount": 155,
         "type": "git",
         "url": "file:./msopenh264"
       },
@@ -178,11 +178,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1666659249,
-        "narHash": "sha256-Qbyj7ya2ZTL5Vt5ONMUwgq/shNSqZVbxDInQbmDO5iw=",
+        "lastModified": 1671458120,
+        "narHash": "sha256-2+k/OONN4OF21TeoNjKB5sXVZv6Zvm/uEyQIW9OYCg8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d4f8e53720b554b6dac71c7ec62b3b51158905f9",
+        "rev": "e37ef84b478fa8da0ced96522adfd956fde9047a",
         "type": "github"
       },
       "original": {
@@ -193,11 +193,11 @@
     "ortp-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1663665382,
-        "narHash": "sha256-47FWIiNTMztcRILUsm6gY4odfu3V/t3Rl8tHD3DfEKo=",
-        "ref": "855a5bb64297a32b31f217eeb1bef03c7049bac1",
-        "rev": "855a5bb64297a32b31f217eeb1bef03c7049bac1",
-        "revCount": 1942,
+        "lastModified": 1667934724,
+        "narHash": "sha256-eaLgqgs2pyy1mHDOsu9+uXF5kSzcwl0782ntM/HX0ik=",
+        "ref": "4970d046ef5c0f7bd82ff0398fef36a37d1c03e5",
+        "rev": "4970d046ef5c0f7bd82ff0398fef36a37d1c03e5",
+        "revCount": 1949,
         "type": "git",
         "url": "file:./ortp"
       },
@@ -227,11 +227,11 @@
     "soci-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1662122129,
-        "narHash": "sha256-2Plx++w1UCP3NBLroD36hdHBkx8ldT2DXMs8PYXWxSg=",
-        "ref": "43f48293bb1f7d00891335686b5e42d93b51f468",
-        "rev": "43f48293bb1f7d00891335686b5e42d93b51f468",
-        "revCount": 2450,
+        "lastModified": 1666869863,
+        "narHash": "sha256-AaB5+enmYCaC/BggzV9U4X5gfpJn3rYcVOYZoZTE6DI=",
+        "ref": "f2fbea4b7fc2166103a10c238c0bdcfbf13073c4",
+        "rev": "f2fbea4b7fc2166103a10c238c0bdcfbf13073c4",
+        "revCount": 2451,
         "type": "git",
         "url": "file:./external/soci"
       },

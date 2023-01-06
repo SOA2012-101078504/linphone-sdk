@@ -19,6 +19,7 @@ debian-doc-upload:
     #-o means print only matched pattern instead of whole line
     #-E means extended regexp, see https://en.wikibooks.org/wiki/Regular_Expressions/POSIX-Extended_Regular_Expressions
 
+    - git describe
     #getting the version number to push the right version of the doc
     - DESCRIBE=$(git -C liblinphone describe)
     - echo $DESCRIBE
@@ -61,6 +62,7 @@ bzrtp-doc-upload:
     #-o means print only matched pattern instead of whole line
     #-E means extended regexp, see https://en.wikibooks.org/wiki/Regular_Expressions/POSIX-Extended_Regular_Expressions
 
+    - git describe
     #getting the version number to push the right version of the doc
     - DESCRIBE=$(git -C bzrtp describe)
     - echo $DESCRIBE
@@ -99,7 +101,7 @@ lime-doc-upload:
     #grep options:
     #-o means print only matched pattern instead of whole line
     #-E means extended regexp, see https://en.wikibooks.org/wiki/Regular_Expressions/POSIX-Extended_Regular_Expressions
-
+    - git describe
     #getting the version number to push the right version of the doc
     - DESCRIBE=$(git -C lime describe)
     - echo $DESCRIBE

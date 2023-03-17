@@ -1,0 +1,14 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<!-- Android -->
+
+  <ItemGroup Condition="$(AndroidSupportedAbis.Contains('x86')) or $(AndroidSupportedAbis.Contains('arm64-v8a')) or $(RuntimeIdentifiers.Contains('android'))">
+    <AndroidAarLibrary Include="$(MSBuildThisFileDirectory)\..\runtimes\android\native\liblinphone-sdk.aar" />
+  </ItemGroup>
+
+<!-- IOS -->
+
+  <ItemGroup Condition="($(Platform.contains('iPhone')) OR $(RuntimeIdentifier.StartsWith('ios')))">
+@NATIVE_REFERENCES@
+  </ItemGroup>
+</Project>

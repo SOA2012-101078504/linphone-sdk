@@ -1,6 +1,6 @@
 ############################################################################
 #
-#  Copyright (c) 2021 Belledonne Communications SARL.
+#  Copyright (c) 2021-2023 Belledonne Communications SARL.
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -21,32 +21,103 @@ cmake_minimum_required(VERSION 3.2)
 
 project(linphonesdk-nuget NONE)
 
+# Require dotnet to generate the nuget package
+find_program(DOTNET dotnet REQUIRED)
+
 if(NOT LINPHONESDK_VERSION)
 	message(FATAL_ERROR "Please specify LINPHONESDK_VERSION. This will be used to derive the version of the `.nupkg`.")
 endif()
+
+if(NOT LINPHONESDK_CSHARP_WRAPPER_PATH)
+	message(FATAL_ERROR "Please specify LINPHONESDK_CSHARP_WRAPPER_PATH. This should be the path to `LinphoneWrapper.cs`.")
+endif()
+
+if(NOT LINPHONESDK_WIN32_DLL_PATH)
+	message(WARNING "LINPHONESDK_WIN32_DLL_PATH not specified. This should be the path to the `.dll` libraries containing Win32 dll.")
+endif()
+
+if(NOT LINPHONESDK_WIN64_DLL_PATH)
+	message(WARNING "LINPHONESDK_WIN64_DLL_PATH not specified. This should be the path to the `.dll` libraries containing Win64 dll.")
+endif()
+
+if(NOT LINPHONESDK_OSX_DYLIB_PATH)
+	message(WARNING "LINPHONESDK_OSX_DYLIB_PATH not specified. This should be the path to the `.dylib` libraries.")
+endif()
+
+if(NOT LINPHONESDK_LINUX_SO_PATH)
+	message(WARNING "LINPHONESDK_LINPHONE_SO_PATH not specified. This should be the path to `liblinphone.so` and other .so libraries.")
+endif()
+
+if(NOT LINPHONESDK_ANDROID_AAR_PATH)
+	message(WARNING "LINPHONESDK_ANDROID_AAR_PATH not specified. This should be the path to `liblinphone.aar`.")
+endif()
+
+if(NOT LINPHONESDK_IOS_XCFRAMEWORK_PATH)
+	message(WARNING "LINPHONESDK_IOS_XCFRAMEWORK_PATH not specified. This should be the path to the `XCFrameworks/` folder containing Apple `.xcframework` folders.")
+endif()
+
+
+####################### Csproj generation ##############
 
 # Workaround Gitlab's NuGet registry lookup by version being incompatible with NuGet clients
 # https://gitlab.com/gitlab-org/gitlab/-/issues/270976
 string(REGEX REPLACE "\\+[0-9a-f]+" "" NUPKG_VERSION ${LINPHONESDK_VERSION})
 
 string(TIMESTAMP CURRENT_YEAR "%Y")
-configure_file(
-	${CMAKE_CURRENT_SOURCE_DIR}/shared-nuspec-metadata.in.xml
-	${CMAKE_CURRENT_BINARY_DIR}/shared-nuspec-metadata.xml
-	@ONLY
-)
-file(READ ${CMAKE_CURRENT_BINARY_DIR}/shared-nuspec-metadata.xml SHARED_NUSPEC_METADATA)
-file(READ ${CMAKE_CURRENT_SOURCE_DIR}/nuget-description.txt LINPHONESDK_DESCRIPTION)
+
 # Icon copied from:
 # https://gitlab.linphone.org/BC/public/linphone-desktop/-/raw/08ca4791c0ccb5dd1693a878b975fd347a8cf490/linphone-app/assets/icons/hicolor/128x128/apps/icon.png
 set(NUGET_ICON_PATH ${CMAKE_CURRENT_SOURCE_DIR}/icon.png)
 
-if(WIN32)
-    message(STATUS "NuGet target inferred to be Windows")
-    add_subdirectory(Windows)
-elseif(APPLE)
-    message(STATUS "NuGet target inferred to be Xamarin")
-    add_subdirectory(Xamarin)
-else()
-    message(FATAL_ERROR "I don't know how to generate a NuGet on the current platform")
-endif()
+# Project file of the nuget, where the magic happens
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/LinphoneSDK.csproj.in
+	${CMAKE_CURRENT_BINARY_DIR}/LinphoneSDK.csproj
+	@ONLY
+)
+
+####################### Targets generation ##############
+
+# Generate native calls for all ios frameworks in targets file
+set(NATIVE_REFERENCES "")
+file(GLOB files "${LINPHONESDK_IOS_XCFRAMEWORK_PATH}/*")
+foreach(file ${files})
+	get_filename_component(fullName ${file} NAME)
+	string(APPEND NATIVE_REFERENCES "    <NativeReference Include=\"\$(MSBuildThisFileDirectory)\\..\\runtimes\\ios\\native\\${fullName}\">\n")
+	string(APPEND NATIVE_REFERENCES "      <Kind>Framework</Kind>\n")
+	string(APPEND NATIVE_REFERENCES "    </NativeReference>\n")
+endforeach()
+
+
+# file to specify to the client what to embed in apk and bundle app (android/ios)
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/LinphoneSDK.targets.in
+	${CMAKE_CURRENT_BINARY_DIR}/build/LinphoneSDK.targets
+	@ONLY
+)
+
+####################### Nuget generation ##############
+
+# Call pack, need at least the csharp Wrapper. Empty variables PATH will be ignored.
+add_custom_command(
+	COMMENT "Packaging NuGet"
+	OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/packages/LinphoneSDK.${NUPKG_VERSION}.nupkg"
+	DEPENDS
+		"${LINPHONESDK_CSHARP_WRAPPER_PATH}/LinphoneWrapper.cs"
+	COMMAND ${DOTNET} "pack" "LinphoneSDK.csproj" "--output" "${CMAKE_CURRENT_BINARY_DIR}/packages"
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+add_custom_target(${PROJECT_NAME}
+	ALL
+	DEPENDS
+		"${CMAKE_CURRENT_BINARY_DIR}/packages/LinphoneSDK.${NUPKG_VERSION}.nupkg"
+		"${LINPHONESDK_CSHARP_WRAPPER_PATH}/LinphoneWrapper.cs"
+)
+
+####################### Deploy ##############
+
+add_custom_command(TARGET ${PROJECT_NAME}
+	COMMAND ${CMAKE_COMMAND} "-E" "copy_directory"  "${CMAKE_CURRENT_BINARY_DIR}/packages" "${CMAKE_INSTALL_PREFIX}/packages"
+	WORKING_DIRECTORY ${LINPHONESDK_OUTPUT_DIR}
+)

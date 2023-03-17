@@ -10,6 +10,9 @@
     - ubuntu1804-ninja-gcc
   variables:
     PLATFORM: linux-ubuntu1804
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
 
 .factorize_ubuntu1804_s: &docker_image_platform_and_runner_tag_s
   tags: [ "docker-sequential" ]
@@ -18,14 +21,20 @@
     - ubuntu1804-ninja-gcc
   variables:
     PLATFORM: linux-ubuntu1804
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
 
 .factorize_ubuntu1804_libl: &docker_image_platform_and_runner_tag_libl
-  tags: [ "docker-test" ]
+  tags: [ "docker-test-liblinphone" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-ubuntu-18-04-lts-test-liblinphone:$UBUNTU_1804_TEST_LIBLIN_IMAGE_VERSION
   needs:
     - ubuntu1804-ninja-gcc
   variables:
     PLATFORM: linux-ubuntu1804
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
 
 #################################################
 # Makefile
@@ -35,7 +44,8 @@ ubuntu1804-makefile-clang:
   tags: [ "docker" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-ubuntu-18-04-lts:$UBUNTU_1804_IMAGE_VERSION
   rules:
-    - if: $NIGHTLY_MASTER
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
   variables:
     CMAKE_GENERATOR: Unix Makefiles
     CC: clang
@@ -73,7 +83,8 @@ ubuntu1804-ninja-gcc:
 
 ubuntu1804-ninja-gcc-pqc:
   rules:
-   - if: $NIGHTLY_MASTER
+   - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
+   - if: $CI_PIPELINE_SOURCE == "schedule" && $DOCKER_UPDATE == null && $SKIP_LINUX == null
   variables:
     CMAKE_OPTIONS: -DENABLE_PQCRYPTO=YES -DENABLE_LDAP=ON
   extends: ubuntu1804-ninja-gcc

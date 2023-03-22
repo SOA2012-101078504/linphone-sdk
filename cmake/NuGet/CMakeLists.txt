@@ -28,24 +28,35 @@ if(NOT LINPHONESDK_VERSION)
 	message(FATAL_ERROR "Please specify LINPHONESDK_VERSION. This will be used to derive the version of the `.nupkg`.")
 endif()
 
+# We absolutely need the wrapper to compile for at least one platform
 if(NOT LINPHONESDK_CSHARP_WRAPPER_PATH)
 	message(FATAL_ERROR "Please specify LINPHONESDK_CSHARP_WRAPPER_PATH. This should be the path to `LinphoneWrapper.cs`.")
 endif()
 
-if(NOT LINPHONESDK_WIN32_DLL_PATH)
-	message(WARNING "LINPHONESDK_WIN32_DLL_PATH not specified. This should be the path to the `.dll` libraries containing Win32 dll.")
+if(NOT EXISTS "${LINPHONESDK_CSHARP_WRAPPER_PATH}/LinphoneWrapper.cs")
+	message(FATAL_ERROR "${LINPHONESDK_CSHARP_WRAPPER_PATH}/LinphoneWrapper.cs not found.")
 endif()
 
-if(NOT LINPHONESDK_WIN64_DLL_PATH)
-	message(WARNING "LINPHONESDK_WIN64_DLL_PATH not specified. This should be the path to the `.dll` libraries containing Win64 dll.")
+if(NOT LINPHONESDK_SHARE_PATH)
+	message(WARNING "LINPHONESDK_SHARE_PATH not specified. This should be the path to the share folder containing grammars and rootca.pem.")
 endif()
 
-if(NOT LINPHONESDK_OSX_DYLIB_PATH)
-	message(WARNING "LINPHONESDK_OSX_DYLIB_PATH not specified. This should be the path to the `.dylib` libraries.")
+if(NOT LINPHONESDK_WIN32_DESKTOP_PATH)
+	message(WARNING "LINPHONESDK_WIN32_DESKTOP_PATH not specified. This should be the path to the bin folder containing Win32 dll.")
+endif()
+
+if(NOT LINPHONESDK_WIN64_DESKTOP_PATH)
+	message(WARNING "LINPHONESDK_WIN64_DESKTOP_PATH not specified. This should be the path to the bin folder containing Win64 dll.")
+endif()
+
+if(NOT LINPHONESDK_OSX_FRAMEWORK_PATH)
+	message(WARNING "LINPHONESDK_OSX_FRAMEWORK_PATH not specified. This should be the path to the osx frameworks.")
 endif()
 
 if(NOT LINPHONESDK_LINUX_SO_PATH)
 	message(WARNING "LINPHONESDK_LINPHONE_SO_PATH not specified. This should be the path to `liblinphone.so` and other .so libraries.")
+else()
+	file(REAL_PATH ${LINPHONESDK_LINUX_SO_PATH} LINPHONESDK_LINUX_SO_PATH EXPAND_TILDE)
 endif()
 
 if(NOT LINPHONESDK_ANDROID_AAR_PATH)
@@ -79,14 +90,16 @@ configure_file(
 ####################### Targets generation ##############
 
 # Generate native calls for all ios frameworks in targets file
-set(NATIVE_REFERENCES "")
-file(GLOB files "${LINPHONESDK_IOS_XCFRAMEWORK_PATH}/*")
-foreach(file ${files})
-	get_filename_component(fullName ${file} NAME)
-	string(APPEND NATIVE_REFERENCES "    <NativeReference Include=\"\$(MSBuildThisFileDirectory)\\..\\runtimes\\ios\\native\\${fullName}\">\n")
-	string(APPEND NATIVE_REFERENCES "      <Kind>Framework</Kind>\n")
-	string(APPEND NATIVE_REFERENCES "    </NativeReference>\n")
-endforeach()
+if(LINPHONESDK_IOS_XCFRAMEWORK_PATH)
+	set(NATIVE_REFERENCES "")
+	file(GLOB files "${LINPHONESDK_IOS_XCFRAMEWORK_PATH}/*")
+	foreach(file ${files})
+		get_filename_component(fullName ${file} NAME)
+		string(APPEND NATIVE_REFERENCES "    <NativeReference Include=\"\$(MSBuildThisFileDirectory)\\..\\runtimes\\ios\\native\\${fullName}\">\n")
+		string(APPEND NATIVE_REFERENCES "      <Kind>Framework</Kind>\n")
+		string(APPEND NATIVE_REFERENCES "    </NativeReference>\n")
+	endforeach()
+endif()
 
 
 # file to specify to the client what to embed in apk and bundle app (android/ios)
